@@ -1,5 +1,5 @@
 const path = require('path');
-const { escapeMarkdown } = require('discord.js');
+const { escapeMarkdown, MessageEmbed } = require('discord.js');
 const { oneLine, stripIndents } = require('common-tags');
 const ArgumentCollector = require('./collector');
 const { permissions } = require('../util');
@@ -350,11 +350,15 @@ class Command {
 		}).join(owners.length > 2 ? ', ' : ' ') : '';
 
 		const invite = this.client.options.invite;
-		return message.reply(stripIndents`
-			An error occurred while running the command: \`${err.name}: ${err.message}\`
-			You shouldn't ever receive an error like this.
-			Please contact ${ownerList || 'the bot owner'}${invite ? ` in this server: ${invite}` : '.'}
-		`);
+		return message.replyEmbed(
+			new MessageEmbed()
+				.setColor('RED')
+				.setDescription(stripIndents`
+				An error occurred while running the command: \`${err.name}: ${err.message}\`
+				You shouldn't ever receive an error like this.
+				Please contact ${ownerList || 'the bot owner'}${invite ? ` in this server: ${invite}` : '.'}
+			`)
+		);
 	}
 
 	/**

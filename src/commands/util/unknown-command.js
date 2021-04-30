@@ -1,4 +1,5 @@
 const Command = require('../base');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class UnknownCommandCommand extends Command {
 	constructor(client) {
@@ -14,12 +15,14 @@ module.exports = class UnknownCommandCommand extends Command {
 	}
 
 	run(msg) {
-		return msg.reply(
-			`Unknown command. Use ${msg.anyUsage(
-				'help',
-				msg.guild ? undefined : null,
-				msg.guild ? undefined : null
-			)} to view the command list.`
-		);
+		return msg.say({
+			embed: new MessageEmbed()
+				.setColor('RED')
+				.setDescription(`Unknown command. Use ${msg.anyUsage(
+					'help',
+					msg.guild ? undefined : null,
+					msg.guild ? undefined : null
+				)} to view the command list.`)
+		});
 	}
 };

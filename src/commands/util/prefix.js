@@ -1,4 +1,5 @@
 const { stripIndents, oneLine } = require('common-tags');
+const { MessageEmbed } = require('discord.js');
 const Command = require('../base');
 
 module.exports = class PrefixCommand extends Command {
@@ -33,19 +34,28 @@ module.exports = class PrefixCommand extends Command {
 		// Just output the prefix
 		if(!args.prefix) {
 			const prefix = msg.guild ? msg.guild.commandPrefix : this.client.commandPrefix;
-			return msg.reply(stripIndents`
-				${prefix ? `The command prefix is \`${prefix}\`.` : 'There is no command prefix.'}
-				To run commands, use ${msg.anyUsage('command')}.
-			`);
+			return msg.say({
+				embed: new MessageEmbed()
+					.setColor('BLUE')
+					.setDescription(`${prefix ? `The command prefix is \`${prefix}\`.` : 'There is no command prefix.'}\nTo run commands, use ${msg.anyUsage('command')}`)
+			});
 		}
 
 		// Check the user's permission before changing anything
 		if(msg.guild) {
 			if(!msg.member.permissions.has('ADMINISTRATOR') && !this.client.isOwner(msg.author)) {
-				return msg.reply('Only administrators may change the command prefix.');
+				return msg.say({
+					embed: new MessageEmbed()
+						.setColor('RED')
+						.setDescription('Only administrators may change the command prefix.')
+				});
 			}
 		} else if(!this.client.isOwner(msg.author)) {
-			return msg.reply('Only the bot owner(s) may change the global command prefix.');
+			return msg.say({
+				embed: new MessageEmbed()
+					.setColor('RED')
+					.setDescription('Only the bot owner(s) may change the global command prefix.')
+			});
 		}
 
 		// Save the prefix
@@ -61,7 +71,11 @@ module.exports = class PrefixCommand extends Command {
 			response = prefix ? `Set the command prefix to \`${args.prefix}\`.` : 'Removed the command prefix entirely.';
 		}
 
-		await msg.reply(`${response} To run commands, use ${msg.anyUsage('command')}.`);
+		await msg.say({
+			embed: new MessageEmbed()
+				.setColor('BLUE')
+				.setDescription(`${response} To run commands, use ${msg.anyUsage('command')}.`)
+		});
 		return null;
 	}
 };
