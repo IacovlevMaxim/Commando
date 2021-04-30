@@ -95,9 +95,12 @@ module.exports = class HelpCommand extends Command {
 		} else {
 			const messages = [];
 			try {
-				messages.push(await msg.say({
+				messages.push(
+					await msg.say({
 					embed: new MessageEmbed()
-						.setTitle(`Help with ${message.client.user.username}`)
+						.setTitle(`Help with ${msg.client.user.username}`)
+						.setColor('YELLOW')
+						.setThumbnail((msg.client.user.displayAvatarURL({format: "png", size: 2048})))
 						.setDescription(stripIndents`
 							${oneLine`
 								To run a command in ${msg.guild ? msg.guild.name : 'any server'},
@@ -120,7 +123,8 @@ module.exports = class HelpCommand extends Command {
 								`).join('\n\n')
 							}
 						`)
-				}));
+					}));
+
 				if(msg.channel.type !== 'dm') messages.push(await msg.replyEmbed(
 					new MessageEmbed()
 						.setColor('GREEN')
