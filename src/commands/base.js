@@ -304,27 +304,43 @@ class Command {
 	onBlock(message, reason, data) {
 		switch(reason) {
 			case 'guildOnly':
-				return message.reply(`The \`${this.name}\` command must be used in a server channel.`);
+				return message.replyEmbed(
+					new MessageEmbed()
+						.setColor('RED')
+						.setDescription(`Feeling lonely here. The \`${this.name}\` command must be used in a server channel.`)
+				);
 			case 'nsfw':
 				return message.reply(`The \`${this.name}\` command can only be used in NSFW channels.`);
 			case 'permission': {
 				if(data.response) return message.reply(data.response);
-				return message.reply(`You do not have permission to use the \`${this.name}\` command.`);
+				return message.replyEmbed(
+					new MessageEmbed()
+						.setColor('RED')
+						.setDescription(`*sniff* I smell your weakness *sniff* .You do not have permission to use the \`${this.name}\` command.`)
+				);
 			}
 			case 'clientPermissions': {
 				if(data.missing.length === 1) {
-					return message.reply(
-						`I need the "${permissions[data.missing[0]]}" permission for the \`${this.name}\` command to work.`
+					return message.replyEmbed(
+						new MessageEmbed()
+							.setColor('RED')
+							.setDescription(`One infinity stone left! I need the "${permissions[data.missing[0]]}" permission for the \`${this.name}\` command to work.`)
 					);
 				}
-				return message.reply(oneLine`
-					I need the following permissions for the \`${this.name}\` command to work:
-					${data.missing.map(perm => permissions[perm]).join(', ')}
-				`);
+				return message.replyEmbed(
+					new MessageEmbed()
+						.setColor('RED')
+						.setDescription(oneLine`
+						I ... dont have enough power... I need the following permissions for the \`${this.name}\` command to work:
+						${data.missing.map(perm => permissions[perm]).join(', ')}
+					`)
+				);
 			}
 			case 'throttling': {
-				return message.reply(
-					`You may not use the \`${this.name}\` command again for another ${data.remaining.toFixed(1)} seconds.`
+				return message.replyEmbed(
+					new MessageEmbed()
+						.setColor('RED')
+						.setDescription(`WOAH WOAH WOAH CHILL A BIT! Wait another ${data.remaining.toFixed(1)} seconds to use this command`)
 				);
 			}
 			default:

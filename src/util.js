@@ -74,5 +74,6 @@ module.exports = {
 	disambiguation,
 	paginate,
 	permissions,
-	isConstructor
+	isConstructor,
+	errorEmbed
 };

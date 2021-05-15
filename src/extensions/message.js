@@ -1,4 +1,4 @@
-const { Structures, escapeMarkdown, splitMessage, resolveString } = require('discord.js');
+const { Structures, escapeMarkdown, splitMessage, resolveString, MessageEmbed } = require('discord.js');
 const { oneLine } = require('common-tags');
 const Command = require('../commands/base');
 const FriendlyError = require('../errors/friendly');
@@ -115,6 +115,19 @@ module.exports = Structures.extend('Message', Message => {
 					throw new RangeError(`Unknown argsType "${this.argsType}".`);
 			}
 		}
+		/**
+		 * Send a error embed
+		 * @param {string} content - Error of the command
+		 * @returns {Promise<Message>}
+		 */
+
+		async errorEmbed(content) {
+			return this.replyEmbed(
+				new MessageEmbed()
+					.setColor('RED')
+					.setDescription(content)
+			);
+		}
 
 		/**
 		 * Runs the command
@@ -208,7 +221,11 @@ module.exports = Structures.extend('Message', Message => {
 					 * (if applicable - see {@link Command#run})
 					 */
 					this.client.emit('commandCancel', this.command, collResult.cancelled, this, collResult);
-					return this.reply('Cancelled command.');
+					return this.replyEmbed(
+						new MessageEmbed()
+							.setColor('RED')
+							.setDescription('Cancelled command.')
+					);
 				}
 				args = collResult.values;
 			}
@@ -257,7 +274,11 @@ module.exports = Structures.extend('Message', Message => {
 				this.client.emit('commandError', this.command, err, this, args, fromPattern, collResult);
 				if(this.channel.typingCount > typingCount) this.channel.stopTyping();
 				if(err instanceof FriendlyError) {
-					return this.reply(err.message);
+					return this.replyEmbed(
+						new MessageEmbed()
+							.setColor('RED')
+							.setDescription(err.message)
+					);
 				} else {
 					return this.command.onError(err, this, args, fromPattern, collResult);
 				}
