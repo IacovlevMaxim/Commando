@@ -309,13 +309,12 @@ class CommandoRegistry {
 	 */
 	registerDefaultCommands(commands = {}) {
 		commands = {
-			help: true, prefix: true, ping: true, eval: true,
+			help: true, prefix: true, ping: true, eval: false,
 			unknownCommand: true, commandState: true, ...commands
 		};
 		if(commands.help) this.registerCommand(require('./commands/util/help'));
 		if(commands.prefix) this.registerCommand(require('./commands/util/prefix'));
 		if(commands.ping) this.registerCommand(require('./commands/util/ping'));
-		if(commands.eval) this.registerCommand(require('./commands/util/eval'));
 		if(commands.unknownCommand) this.registerCommand(require('./commands/util/unknown-command'));
 		if(commands.commandState) {
 			this.registerCommands([
