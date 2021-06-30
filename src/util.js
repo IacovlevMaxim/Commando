@@ -75,5 +75,4 @@ module.exports = {
 	paginate,
 	permissions,
 	isConstructor,
-	errorEmbed
 };
